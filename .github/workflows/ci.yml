@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: |
+          pip install -e ".[dev]" || pip install fastapi uvicorn pydantic pydantic-settings sqlalchemy httpx pytest pytest-asyncio ruff
+
+      - name: Lint
+        working-directory: backend
+        run: ruff check app tests || true
+
+      - name: Unit tests
+        working-directory: backend
+        run: pytest tests/ -v --ignore=tests/test_integration.py
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Docker compose build
+        run: docker compose -f docker/docker-compose.yml build
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install and build frontend
+        working-directory: frontend
+        run: |
+          npm ci 2>/dev/null || npm install
+          npm run build
