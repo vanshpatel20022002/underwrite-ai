@@ -1,0 +1,128 @@
+﻿"Cube Title","Product Id","CANSIM Id",URL,"Cube Notes","Archive Status",Frequency,"Start Reference Period","End Reference Period","Total number of dimensions"
+"Number of residential properties sold and sale price by property type and period of construction","46100057",,"https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=4610005701",1;2;3;17,"CURRENT - a cube available to the public and that is current","Annual","2018-01-01","2018-01-01","4",
+
+"Dimension ID","Dimension name","Dimension Notes","Dimension Definitions"
+"1","Geography",,""
+"2","Sale type",4,""
+"3","Property characteristics",7;13;17,""
+"4","Estimates",,""
+
+"Dimension ID","Member Name","Classification Code","Member ID","Parent Member ID",Terminated,"Member Notes","Member Definitions"
+"1","Cape Breton, Census agglomeration (CA)","[225]","2","1","",,
+"1","Halifax, Census metropolitan area (CMA)","[205]","3","1","",,
+"1","Kentville, Census agglomeration (CA)","[210]","4","1","",,
+"1","New Glasgow, Census agglomeration (CA)","[220]","5","1","",,
+"1","Truro, Census agglomeration (CA)","[215]","6","1","",,
+"1","Outside of census metropolitan and agglomeration areas, Nova Scotia","","7","1","",,
+"1","Bathurst, Census agglomeration (CA)","[328]","9","8","",,
+"1","Campbellton (New Brunswick part), Census agglomeration (CA) – provincial part","[13330]","10","8","",,
+"1","Edmundston, Census agglomeration (CA)","[335]","11","8","",,
+"1","Fredericton, Census agglomeration (CA)","[320]","12","8","",,
+"1","Miramichi, Census agglomeration (CA)","[329]","13","8","",,
+"1","Moncton, Census metropolitan area (CMA)","[305]","14","8","",,
+"1","Saint John, Census metropolitan area (CMA)","[310]","15","8","",,
+"1","Outside of census metropolitan and agglomeration areas, New Brunswick","","16","8","",,
+"1","Abbotsford - Mission, Census metropolitan area (CMA)","[932]","18","17","",,
+"1","Campbell River, Census agglomeration (CA)","[944]","19","17","",,
+"1","Chilliwack, Census agglomeration (CA)","[930]","20","17","",,
+"1","Courtenay, Census agglomeration (CA)","[943]","21","17","",,
+"1","Cranbrook, Census agglomeration (CA)","[905]","22","17","",,
+"1","Dawson Creek, Census agglomeration (CA)","[975]","23","17","",,
+"1","Duncan, Census agglomeration (CA)","[937]","24","17","",,
+"1","Fort St. John, Census agglomeration (CA)","[977]","25","17","",,
+"1","Kamloops, Census agglomeration (CA)","[925]","26","17","",,
+"1","Kelowna, Census metropolitan area (CMA)","[915]","27","17","",,
+"1","Nanaimo, Census agglomeration (CA)","[938]","28","17","",,
+"1","Nelson, Census agglomeration (CA)","[907]","29","17","",,
+"1","Parksville, Census agglomeration (CA)","[939]","30","17","",,
+"1","Penticton, Census agglomeration (CA)","[913]","31","17","",,
+"1","Port Alberni, Census agglomeration (CA)","[940]","32","17","",,
+"1","Powell River, Census agglomeration (CA)","[945]","33","17","",,
+"1","Prince George, Census agglomeration (CA)","[970]","34","17","",,
+"1","Prince Rupert, Census agglomeration (CA)","[955]","35","17","",,
+"1","Quesnel, Census agglomeration (CA)","[952]","36","17","",,
+"1","Salmon Arm, Census agglomeration (CA)","[920]","37","17","",,
+"1","Squamish, Census agglomeration (CA)","[934]","38","17","",,
+"1","Terrace, Census agglomeration (CA)","[965]","39","17","",,
+"1","Vancouver, Census metropolitan area (CMA)","[933]","40","17","",,
+"1","Vernon, Census agglomeration (CA)","[918]","41","17","",,
+"1","Victoria, Census metropolitan area (CMA)","[935]","42","17","",,
+"1","Williams Lake, Census agglomeration (CA)","[950]","43","17","",,
+"1","Outside of census metropolitan and agglomeration areas, British Columbia","","44","17","",,
+"1","Nova Scotia","[12]","1","","",,
+"1","New Brunswick","[13]","8","","",,
+"1","British Columbia","[59]","17","","",,
+"2","Non-market sale","","2","1","",16,
+"2","Market sale","","3","1","",,
+"2","Total, all sale types","","1","","",,
+"3","Single-detached house","","2","1","",,
+"3","Semi-detached house","","3","1","",,
+"3","Row house","","4","1","",,
+"3","Condominium apartment","","5","1","",8,
+"3","Mobile homes","","6","1","",9,
+"3","Other property type","","7","1","",10,
+"3","Property with multiple residential units","","8","1","",11,
+"3","Vacant land","","9","1","",12,
+"3","1960 or earlier","","11","10","",,
+"3","1961 to 1970","","12","10","",,
+"3","1971 to 1980","","13","10","",,
+"3","1991 to 2000","","15","10","",,
+"3","2001 to 2005","","16","10","",,
+"3","2006 to 2010","","17","10","",,
+"3","2011 to 2015","","18","10","",,
+"3","2016 to reference period","","19","10","",,
+"3","Unspecified period of construction","","20","10","",,
+"3","Period of construction not applicable (vacant land)","","21","10","",,
+"3","1981 to 1990","","14","10","",,
+"3","Total, all property types","","1","","",,
+"3","Total, all periods of construction","","10","","",,
+"4","Number of properties sold","","1","","",14,
+"4","Sale type, percentage","","2","","",14,
+"4","Property characteristics, percentage","","3","","",14,
+"4","Average number of buyers","","4","","",5;15,
+"4","Average sale price","","5","","",6;15;16,
+"4","Median sale price","","6","","",6;15;16,
+
+Symbol Legend
+Description,Symbol
+"not available for a specific reference period","..",
+"less than the limit of detection","<LOD",
+"value rounded to 0 (zero) where there is a meaningful distinction between true zero and the value that was rounded","0s",
+"data quality: excellent","A",
+"data quality: very good","B",
+"data quality: good","C",
+"data quality: acceptable","D",
+"use with caution","E",
+"too unreliable to be published","F",
+"not applicable","...",
+"preliminary","p",
+"revised","r",
+"suppressed to meet the confidentiality requirements of the Statistics Act","x",
+"terminated","t",
+
+"Survey Code","Survey Name"
+"5257","Canadian Housing Statistics Program"
+
+"Subject Code","Subject Name"
+"46","Housing"
+
+"Note ID",Note
+1,"A "residential property" refers to all land and structures intended for private occupancy, whether on a permanent or a temporary basis."
+2,"The geographic boundaries used in this table are the 2016 census metropolitan areas boundaries."
+3,"A "sale" of residential property refers to whether a property had a transfer of ownership from one party to another party through a contractual agreement. A property is considered to have been sold on the date that the property was transferred to, recorded in, registered in or otherwise carried in the name of the party who purchased the property. More than one property may be sold in the same contractual agreement. Pre-sales are not included."
+4,"A "sale type" of residential property refers to whether a property was sold in a market or non-market sale. "Market sale" refers to an arm’s length transaction where all parties act independently with no influence over the other. "Non-market sale" refers to non-arm’s length transactions, which includes distressed sales, foreclosures, trade and forfeitures, redemptions, sales of part interest, and special interest sales."
+5,"A "buyer" refers to an individual or non-individual that has the property title transferred to, recorded in, registered in or otherwise carried in their name from a different party."
+6,""Sale price" of residential property refers to the dollar amount set forth during the sale of the property as per the contractual agreement."
+7,""Property type" refers to property characteristics and/or dwelling configuration, on which there can be one or more residential structures. Property types include: single-detached houses, semi-detached houses, condominium apartments, mobile homes, other property types, properties with multiple residential units, and vacant land."
+8,"A "condominium apartment" refers to a set of living quarters that is owned individually, while land and common elements are held in joint ownership with others."
+9,"A "mobile home" is a single dwelling, designed and constructed to be transported on its own chassis and capable of being moved to a new location on short notice. It may be placed temporarily on a foundation pad and may be covered by a skirt. This category may also include houseboats and mini homes."
+10,"An "other property type" refers to a property where the structure has a single dwelling unit in a mixed-use building and does not fall into any of the other categories, or where the structure type is unknown."
+11,"A "property with multiple residential units" refers to a property containing more than one set of living quarters owned by the same owner(s), as is the case for an apartment building or a duplex."
+12,""Vacant land" refers to a property on which there are currently no residential structures, but where regulations permit that one or more residential structures can be built. Vacant land may also include land on which an existing residential structure has not yet been assessed or land on which a residential structure is present, but owned by another entity (for example a mobile home in a mobile home park)."
+13,""Period of construction" refers to the period in time during which the building or dwelling was originally constructed. This refers to the period in which the building was completed, not the time of any later remodelling, additions or conversions. For properties having multiple residential structures, this refers to the period in which the most recent structure was completed."
+14,"Counts undergo random rounding, a process that transforms all raw counts into randomly rounded counts. This reduces the possibility of identifying individuals in the tabulations. All percentages are derived from rounded counts, subtotals and totals may not exactly equal the sum of components due to system rounding."
+15,"Averages and medians are calculated using properties with non-missing or non-zero values when there is no imputation available for the variables of interest (for example sale price)."
+16,"Estimates of sale prices are not available for non-market sales."
+17,"The universe of this table is restricted to the residential properties sold from January 1 to December 31 of the reference year, whereas the information on the property characteristics (property types and periods of construction) is from the following reference year."
+
+"Correction ID","Correction Date","Correction Note"
