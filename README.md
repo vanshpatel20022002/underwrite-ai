@@ -71,7 +71,7 @@ flowchart TD
 
 ```bash
 git clone https://github.com/vanshpatel20022002/underwrite-ai.git
-cd new
+cd underwrite-ai
 cp .env.example .env
 ```
 
