@@ -190,7 +190,20 @@ Verified result for **15 Deermeade Pl SE, Calgary, AB** (3 bed / 2 bath / 1,838 
 > **Recommendation** — `review`
 
 ---
+## Demo Screenshots
 
+### Create underwriting case
+
+![Create underwriting case](docs/screenshots/01-new-case.png)
+
+### Valuation, risk score, and comparable sales map
+
+![Valuation and map](docs/screenshots/02-valuation-map.png)
+
+### Generated underwriting memo
+
+![Underwriting memo](docs/screenshots/03-underwriting-memo.png)
+---
 ## Data Disclosure
 
 **This project uses Calgary municipal property assessment data, not real estate transaction data.**
