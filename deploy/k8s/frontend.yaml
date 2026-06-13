@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: underwriting
+  labels:
+    app: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: underwriting-frontend:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3000
+          env:
+            # NEXT_PUBLIC_API_URL is baked into the Next.js bundle at build time.
+            # For local clusters, keep this as localhost:8000 (the port-forward address).
+            # For a remote cluster, rebuild the image with the real API URL.
+            - name: NEXT_PUBLIC_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: underwriting-config
+                  key: NEXT_PUBLIC_API_URL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: underwriting
+spec:
+  selector:
+    app: frontend
+  ports:
+    - port: 3000
+      targetPort: 3000
