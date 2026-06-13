@@ -1,0 +1,45 @@
+{
+  "generated_at": "2026-06-12T10:24:01Z",
+  "api_base": "http://localhost:8000",
+  "total_cases": 2,
+  "cases": [
+    {
+      "id": "eval_001",
+      "name": "Deer Run",
+      "address": "15 Deermeade Pl SE, Calgary, AB",
+      "case_id": "abc1",
+      "status": "PASS",
+      "estimated_value": 619917,
+      "confidence_score": 0.94,
+      "risk_score": 35,
+      "num_comps": 5,
+      "recommendation": "review",
+      "total_assertions": 7,
+      "assertions_passed": 7,
+      "assertions_failed": 0,
+      "proxy_disclosure_ok": true,
+      "no_page_citation_ok": true,
+      "no_false_transaction_ok": true,
+      "llm_eval_status": "skipped"
+    },
+    {
+      "id": "eval_002",
+      "name": "McKenzie Towne",
+      "address": "185 Mckenzie Towne Dr SE, Calgary, AB",
+      "case_id": "abc2",
+      "status": "PASS",
+      "estimated_value": 648204,
+      "confidence_score": 0.89,
+      "risk_score": 35,
+      "num_comps": 5,
+      "recommendation": "review",
+      "total_assertions": 5,
+      "assertions_passed": 5,
+      "assertions_failed": 0,
+      "proxy_disclosure_ok": true,
+      "no_page_citation_ok": true,
+      "no_false_transaction_ok": true,
+      "llm_eval_status": "skipped"
+    }
+  ]
+}
