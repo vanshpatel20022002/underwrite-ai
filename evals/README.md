@@ -40,7 +40,7 @@ Defined in `underwriting_eval_cases.json`. Five fixed Calgary cases:
 ## Prerequisites
 
 - Full Docker stack running: `docker compose -f docker/docker-compose.yml up -d`
-- Data seeded and model trained: `docker compose exec api python scripts/seed_data.py`
+- Data seeded and model trained: `docker compose -f docker/docker-compose.yml exec api python scripts/seed_data.py`
 - `requests` installed in the local environment: `pip install requests`
 
 ---
@@ -78,27 +78,28 @@ After a successful run, three files are written to `reports/`:
 
 ## Example terminal output
 
+> The values below are illustrative — actual results depend on your seeded dataset and LLM provider.
+
 ```
 Underwriting Eval Runner — 5 case(s) — API: http://localhost:8000
-Timestamp: 2026-06-12T10:24:01Z
+Timestamp: <ISO timestamp>
 ======================================================================
 
 [eval_001] Standard single-family — Deer Run
   Address: 15 Deermeade Pl SE, Calgary, AB
   ✓ Estimated value must be returned
   ✓ Confidence score (0–1) must be present
-  ✓ At least 3 comparable sales required (got 5, need 3)
+  ✓ At least 3 comparable sales required (got N, need 3)
   ✓ Risk score must be present
   ✓ Memo must include assessed-value proxy disclaimer
   ✓ Memo must not contain 'p.?' citation artifacts
   ✓ Without a zoning document, recommendation must not be 'approve'
-  → value=$619,917  conf=0.94  risk=35  comps=5  rec=review
+  → value=$<value>  conf=<0.xx>  risk=<N>  comps=<N>  rec=review
 
 ...
 
 ======================================================================
-RESULTS: 5/5 passed  |  0 failed  |  0 error(s)
-All eval cases passed.
+RESULTS: X/5 passed  |  Y failed  |  Z error(s)
 
   Saved: reports/eval_results.json
   Saved: reports/eval_matrix.csv
@@ -108,36 +109,42 @@ All eval cases passed.
 
 ---
 
-## Example eval_summary.md
+## Example eval_summary.md structure
+
+> The numbers below are placeholders showing the report format — actual values come from a real run.
 
 ```markdown
 # Underwriting Evaluation Matrix
 
-**Generated:** 2026-06-12T10:24:01Z
+**Generated:** <ISO timestamp>
 **API:** http://localhost:8000
-**Eval set:** fixed regression cases, not a large benchmark
+**Eval set:** `evals/underwriting_eval_cases.json` (fixed regression cases, not a large benchmark)
 
 ## Summary
 
 | Metric | Value |
 |---|---|
 | Total cases | 5 |
-| Cases passed | 5 |
-| Pass rate | 100% |
-| Total assertions passed | 32 |
-| Total assertions failed | 0 |
-| Avg confidence score | 0.87 |
-| Avg risk score | 38 / 100 |
-| Avg comparables returned | 4.8 |
-| Proxy disclosure present | 5 / 5 cases |
-| False transaction-price claims | 0 |
+| Cases passed | X |
+| Pass rate | X% |
+| Total assertions passed | A |
+| Total assertions failed | B |
+| Avg confidence score | 0.xx |
+| Avg risk score | N / 100 |
+| Avg comparables returned | N.N |
+| Proxy disclosure present | X / 5 cases |
+| False transaction-price claims | N |
 
 ## Eval Matrix
 
 | Case | Address | Value | Confidence | Risk | Comps | Recommendation | Assertions | Status |
 | ---- | ------- | ----: | ---------: | ---: | ----: | -------------- | ---------: | ------ |
-| eval_001 | 15 Deermeade Pl SE | $619,917 | 0.94 | 35 | 5 | review | 7/7 | ✅ PASS |
+| eval_001 | 15 Deermeade Pl SE | $<value> | 0.xx | N | N | review | A/B | ✅/❌ |
 ...
+
+## Resume Proof Summary
+
+Evaluated 5 fixed underwriting cases ...
 ```
 
 ---
