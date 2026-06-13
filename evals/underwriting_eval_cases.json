@@ -1,0 +1,173 @@
+[
+  {
+    "id": "eval_001",
+    "name": "Standard single-family — Deer Run",
+    "description": "Well-documented property in a dense Calgary suburb with known comparable density. No uploaded documents, so MISSING_ZONING should fire.",
+    "input": {
+      "address": "15 Deermeade Pl SE, Calgary, AB",
+      "property_type": "single_family",
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "square_footage": 1838,
+      "lot_size": 6567,
+      "year_built": 1981
+    },
+    "assertions": [
+      {
+        "check": "estimated_value_exists",
+        "description": "Estimated value must be returned"
+      },
+      {
+        "check": "confidence_score_exists",
+        "description": "Confidence score (0–1) must be present"
+      },
+      {
+        "check": "min_comps",
+        "value": 3,
+        "description": "At least 3 comparable sales required"
+      },
+      {
+        "check": "risk_score_exists",
+        "description": "Risk score must be present"
+      },
+      {
+        "check": "memo_contains_proxy_disclosure",
+        "description": "Memo must include assessed-value proxy disclaimer"
+      },
+      {
+        "check": "memo_no_page_citation",
+        "description": "Memo must not contain 'p.?' citation artifacts"
+      },
+      {
+        "check": "recommendation_is_review_or_reject_when_no_zoning",
+        "description": "Without a zoning document, recommendation must not be 'approve'"
+      }
+    ]
+  },
+  {
+    "id": "eval_002",
+    "name": "Larger family home — McKenzie Towne",
+    "description": "4-bedroom newer build. Tests that a property with higher square footage returns a higher estimated value than a smaller comp.",
+    "input": {
+      "address": "185 Mckenzie Towne Dr SE, Calgary, AB",
+      "property_type": "single_family",
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "square_footage": 2200,
+      "lot_size": 4500,
+      "year_built": 2008
+    },
+    "assertions": [
+      {
+        "check": "estimated_value_exists",
+        "description": "Estimated value must be returned"
+      },
+      {
+        "check": "min_comps",
+        "value": 3,
+        "description": "At least 3 comparables required"
+      },
+      {
+        "check": "memo_contains_proxy_disclosure",
+        "description": "Memo must include assessed-value proxy disclaimer"
+      },
+      {
+        "check": "memo_no_page_citation",
+        "description": "Memo must not contain 'p.?' citation artifacts"
+      },
+      {
+        "check": "memo_no_actual_transaction_claim",
+        "description": "Memo must not claim values are actual transaction sale prices"
+      }
+    ]
+  },
+  {
+    "id": "eval_003",
+    "name": "Condo — Downtown Calgary",
+    "description": "Smaller condo unit. Validates condo property type is handled and comps are found.",
+    "input": {
+      "address": "510 6 Ave SW, Calgary, AB",
+      "property_type": "condo",
+      "bedrooms": 1,
+      "bathrooms": 1,
+      "square_footage": 650,
+      "year_built": 2015
+    },
+    "assertions": [
+      {
+        "check": "estimated_value_exists",
+        "description": "Estimated value must be returned even for condo type"
+      },
+      {
+        "check": "confidence_score_exists",
+        "description": "Confidence score must be present"
+      },
+      {
+        "check": "memo_contains_proxy_disclosure",
+        "description": "Proxy disclosure required regardless of property type"
+      },
+      {
+        "check": "memo_no_page_citation",
+        "description": "Memo must not contain 'p.?' citation artifacts"
+      }
+    ]
+  },
+  {
+    "id": "eval_004",
+    "name": "Townhouse — Evanston",
+    "description": "Newer townhouse in NW suburb. Tests townhouse property type path and that risk score is computed.",
+    "input": {
+      "address": "120 Evanspark Gardens NW, Calgary, AB",
+      "property_type": "townhouse",
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "square_footage": 1400,
+      "lot_size": 2200,
+      "year_built": 2018
+    },
+    "assertions": [
+      {
+        "check": "estimated_value_exists",
+        "description": "Estimated value must be returned"
+      },
+      {
+        "check": "risk_score_exists",
+        "description": "Risk score must be computed"
+      },
+      {
+        "check": "memo_contains_proxy_disclosure",
+        "description": "Proxy disclosure required"
+      },
+      {
+        "check": "memo_no_page_citation",
+        "description": "No unfinished citation markers"
+      }
+    ]
+  },
+  {
+    "id": "eval_005",
+    "name": "Minimal input — missing optional fields",
+    "description": "Only required fields provided. Tests graceful handling when lot_size and year_built are absent; model should still return a value.",
+    "input": {
+      "address": "300 Harvest Hills Blvd NE, Calgary, AB",
+      "property_type": "single_family",
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "square_footage": 1500
+    },
+    "assertions": [
+      {
+        "check": "estimated_value_exists",
+        "description": "Estimated value must be returned even with minimal input"
+      },
+      {
+        "check": "memo_contains_proxy_disclosure",
+        "description": "Proxy disclosure required regardless of input completeness"
+      },
+      {
+        "check": "memo_no_page_citation",
+        "description": "No unfinished citation markers"
+      }
+    ]
+  }
+]

@@ -1,3 +1,1 @@
 id,address,status,estimated_value,confidence_score,risk_score,num_comps,recommendation,total_assertions,assertions_passed,assertions_failed,proxy_disclosure_ok,no_page_citation_ok,no_false_transaction_ok,llm_eval_status
-eval_001,"15 Deermeade Pl SE, Calgary, AB",PASS,619917,0.94,35,5,review,7,7,0,True,True,True,skipped
-eval_002,"185 Mckenzie Towne Dr SE, Calgary, AB",PASS,648204,0.89,35,5,review,5,5,0,True,True,True,skipped

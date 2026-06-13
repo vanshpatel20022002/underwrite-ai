@@ -16,7 +16,7 @@ Real estate underwriting is manually intensive and judgment-heavy. This project 
 | Hybrid document retrieval (RAG) | Qdrant vector store + cross-encoder reranker |
 | LLM report generation | Groq / OpenAI / Ollama (configurable) |
 | Async document ingestion | Celery + Redis worker queue |
-| Observability | OpenTelemetry tracing, Ragas/DeepEval eval stubs |
+| Observability | Structured logs, Ragas/DeepEval eval stubs, and CI checks |
 | Dockerized full stack | Postgres, Qdrant, Redis, API, Worker, Next.js |
 | Optional Kubernetes deployment | Local/staging manifests for API, worker, frontend, PostGIS, Redis, and Qdrant |
 | MLOps + evaluation | MLflow experiment tracking, deterministic regression evals, optional Evidently drift report |
@@ -212,24 +212,11 @@ mlflow ui --backend-store-uri backend/mlruns
 `evals/run_eval.py` runs 5 fixed Calgary cases end-to-end through the live API and checks structural guarantees — estimated value present, at least 3 comps, proxy disclosure in memo, no `p.?` artifacts, recommendation never `approve` without zoning. After each run it writes `reports/eval_results.json`, `reports/eval_summary.md`, and `reports/eval_matrix.csv`.
 
 ```bash
+# Requires: live stack + seeded data (see Demo Quickstart)
 python evals/run_eval.py
 ```
 
-**This is a fixed regression suite — 5 cases, not a large benchmark.** Results below are from an actual run against the seeded Calgary dataset.
-
-#### Eval matrix (from `reports/eval_summary.md`)
-
-| Case | Address | Value | Confidence | Risk | Comps | Recommendation | Assertions | Status |
-| ---- | ------- | ----: | ---------: | ---: | ----: | -------------- | ---------: | ------ |
-| eval_001 | 15 Deermeade Pl SE | $619,917 | 0.94 | 35 | 5 | review | 7/7 | ✅ PASS |
-| eval_002 | 185 Mckenzie Towne Dr SE | $648,204 | 0.89 | 35 | 5 | review | 5/5 | ✅ PASS |
-| eval_003 | 510 6 Ave SW | $312,480 | 0.81 | 35 | 5 | review | 4/4 | ✅ PASS |
-| eval_004 | 120 Evanspark Gardens NW | $498,763 | 0.86 | 35 | 5 | review | 4/4 | ✅ PASS |
-| eval_005 | 300 Harvest Hills Blvd NE | $531,122 | 0.83 | 35 | 5 | review | 3/3 | ✅ PASS |
-
-> **Pass rate: 5/5 · 32/32 assertions passed · Proxy disclosure: 5/5 · False transaction claims: 0**
->
-> Regenerate with `python evals/run_eval.py` — results are written from actual API workflow runs.
+This is a fixed regression suite (5 Calgary cases, not a large benchmark). The `reports/eval_summary.md` file in this repo is a placeholder — run the script against a seeded stack to populate it with real results. See `evals/README.md` for the full assertion list and expected output format.
 
 ### Optional Ragas / DeepEval LLM evals
 

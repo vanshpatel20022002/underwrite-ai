@@ -34,10 +34,13 @@ mlflow/
 .DS_Store
 Thumbs.db
 
-# Credentials
+# Credentials / generated JSON (keep human-readable reports and config)
 *.json
 !package.json
 !tsconfig.json
+!evals/underwriting_eval_cases.json
+!reports/eval_summary.md
+!reports/eval_matrix.csv
 
 # Docker volumes
 postgres_data/
