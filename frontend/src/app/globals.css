@@ -139,6 +139,48 @@ th {
   font-size: 0.85rem;
 }
 
+.memo-content h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 1.25rem 0 0.4rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.memo-content h2:first-child {
+  margin-top: 0;
+}
+
+.memo-content p {
+  margin-bottom: 0.6rem;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.memo-content ul,
+.memo-content ol {
+  margin: 0.4rem 0 0.6rem 1.25rem;
+}
+
+.memo-content li {
+  font-size: 0.9rem;
+  color: var(--text);
+  margin-bottom: 0.2rem;
+}
+
+.memo-content strong {
+  color: var(--text);
+}
+
+.memo-content blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: 0.75rem;
+  color: var(--muted);
+  font-style: italic;
+  margin: 0.5rem 0;
+}
+
 @media (max-width: 768px) {
   .grid-2 {
     grid-template-columns: 1fr;

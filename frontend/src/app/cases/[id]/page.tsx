@@ -249,7 +249,8 @@ export default function CaseDetailPage() {
               {report.citations.map((c, i) => (
                 <div key={i} style={{ marginBottom: "1rem", paddingBottom: "1rem", borderBottom: "1px solid var(--border)" }}>
                   <strong>
-                    [{c.doc_type}] {c.source_file} p.{c.page ?? "?"}
+                    [{c.doc_type}] {c.source_file}
+                    {c.page != null ? ` p.${c.page}` : c.section ? ` § ${c.section}` : ""}
                   </strong>
                   <p style={{ fontSize: "0.9rem", color: "var(--muted)" }}>{c.snippet}</p>
                 </div>

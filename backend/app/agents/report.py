@@ -9,27 +9,50 @@ from app.schemas.case import Citation, Recommendation
 settings = get_settings()
 
 SYSTEM_PROMPT = """\
-You are a senior real estate underwriting analyst.
-Generate a lender-style underwriting memo using ONLY the provided evidence.
+You are a senior real estate underwriting analyst. Write a concise, professional lender-style underwriting memo.
 
 OUTPUT RULES — follow exactly:
 1. Return ONLY a single JSON object. No markdown fences, no preamble, no explanation.
 2. All string values must use JSON escape sequences: newlines as \\n, tabs as \\t.
 3. Do NOT embed raw newline characters inside string values.
+4. Do NOT use markdown tables anywhere in memo_markdown. Use bullet lists instead.
+5. Do NOT include any citation page references (no "p.?", no "p.1", no "listing p.", no "doc p.X").
 
 Required JSON keys:
-- memo_markdown  : lender memo in Markdown (escape all newlines as \\n). Must include:
-    * Executive Summary
-    * Valuation (include the disclaimer: "Value is based on municipal assessed-value proxy, NOT a market sale price.")
-    * Comparables (list top comps with address, assessed proxy, distance)
-    * Adjustments table summary
-    * Risk Assessment (risk score, each flag with severity)
-    * Recommendation with rationale
+- memo_markdown  : lender memo in Markdown (escape all newlines as \\n).
+    Use EXACTLY these section headers in this order:
+
+    ## Executive Summary
+    2-3 sentences: property address, estimated value, overall recommendation.
+
+    ## Valuation
+    Estimated value, confidence interval, confidence score.
+    Always include this exact sentence: "Value is based on municipal assessed-value proxy data, NOT a market sale price."
+
+    ## Comparable Sales
+    Bullet list only — no tables. Each bullet: address, assessed proxy value, distance.
+    Example: "- 123 Main St: $420,000 assessed proxy, 0.3 mi"
+
+    ## Adjustments
+    Bullet list only — no tables. Group by comp ID.
+    Example: "- Comp C001 | GLA: subject 1,800 sqft vs comp 2,100 sqft → -$9,000"
+
+    ## Risk Assessment
+    Risk score out of 100. Bullet list of each risk flag with [SEVERITY] label and one-line explanation.
+
+    ## Recommendation
+    State the recommendation (approve / review / reject) and explain WHY with 2-3 specific data points
+    from the case (e.g., confidence score, risk score, specific risk flags, or comp spread).
+    Do not use vague language. Be direct.
+
+    ## Data Limitation
+    This estimate is based on municipal assessed-value proxy data, not actual transaction sale prices.
+
 - recommendation : exactly one of: approve | review | reject
 - confidence_score: float 0.0–1.0
-- key_assumptions : list of strings (include proxy-value disclosure as first item)
+- key_assumptions : list of strings
 
-Never recommend approve without strong evidence. Never omit the assessed-value disclaimer."""
+Keep the memo under 500 words. Never omit any section header. Never recommend approve without strong evidence."""
 
 
 def build_report(
@@ -127,12 +150,43 @@ Use citations from the citations array. Include comparable analysis and adjustme
 
 
 def _fallback_memo(subject, comps, valuation, risk_flags, exc) -> str:
-    return f"""# Underwriting Memo (Fallback)
+    address = subject.get("address", "N/A")
+    est_value = valuation.get("estimated_value", 0) or 0
+    ci = valuation.get("confidence_interval") or {}
+    ci_low = ci.get("low", 0)
+    ci_high = ci.get("high", 0)
+    confidence = valuation.get("confidence_score", 0.5) or 0.5
 
-**Property:** {subject.get('address', 'N/A')}
-**Estimated Value:** ${valuation.get('estimated_value', 0):,.0f}
-**Comparables:** {len(comps)}
-**Risk Flags:** {len(risk_flags)}
+    comp_bullets = "\n".join(
+        f"- {c.get('address', 'N/A')}: ${c.get('sale_price', 0):,.0f} assessed proxy, "
+        f"{c.get('distance_miles', 0):.1f} mi"
+        for c in (comps[:5] if comps else [])
+    ) or "- No comparables available."
 
-> LLM generation unavailable ({exc}). Manual review required.
-"""
+    flag_bullets = "\n".join(
+        f"- [{f.get('severity', 'UNKNOWN').upper()}] {f.get('message', '')}"
+        for f in (risk_flags if risk_flags else [])
+    ) or "- No risk flags identified."
+
+    return (
+        f"## Executive Summary\n\n"
+        f"Property at {address} has an estimated value of ${est_value:,.0f}. "
+        f"Automated report generation was unavailable; manual review is required.\n\n"
+        f"## Valuation\n\n"
+        f"- Estimated Value: ${est_value:,.0f}\n"
+        f"- Confidence Interval: ${ci_low:,.0f} – ${ci_high:,.0f}\n"
+        f"- Confidence Score: {confidence * 100:.0f}%\n\n"
+        f"Value is based on municipal assessed-value proxy data, NOT a market sale price.\n\n"
+        f"## Comparable Sales\n\n"
+        f"{comp_bullets}\n\n"
+        f"## Adjustments\n\n"
+        f"- Adjustments not computed; LLM unavailable.\n\n"
+        f"## Risk Assessment\n\n"
+        f"{flag_bullets}\n\n"
+        f"## Recommendation\n\n"
+        f"**Review required.** Automated LLM generation failed ({type(exc).__name__}). "
+        f"Confidence score ({confidence * 100:.0f}%) and {len(risk_flags)} risk flag(s) "
+        f"require manual underwriter assessment before any credit decision.\n\n"
+        f"## Data Limitation\n\n"
+        f"This estimate is based on municipal assessed-value proxy data, not actual transaction sale prices."
+    )
