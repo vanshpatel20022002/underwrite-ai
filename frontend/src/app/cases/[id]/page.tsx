@@ -243,20 +243,48 @@ export default function CaseDetailPage() {
             </div>
           )}
 
-          {report.citations && report.citations.length > 0 && (
-            <div className="card">
-              <h3>Citations</h3>
-              {report.citations.map((c, i) => (
-                <div key={i} style={{ marginBottom: "1rem", paddingBottom: "1rem", borderBottom: "1px solid var(--border)" }}>
-                  <strong>
-                    [{c.doc_type}] {c.source_file}
-                    {c.page != null ? ` p.${c.page}` : c.section ? ` § ${c.section}` : ""}
-                  </strong>
-                  <p style={{ fontSize: "0.9rem", color: "var(--muted)" }}>{c.snippet}</p>
-                </div>
-              ))}
-            </div>
-          )}
+          {(() => {
+            const usableCitations = (report.citations ?? []).filter(
+              (c) => c.snippet && c.snippet.trim().length > 10
+            );
+            if (usableCitations.length === 0) return null;
+            return (
+              <div className="card">
+                <h3>Supporting Evidence</h3>
+                {usableCitations.map((c, i) => {
+                  const sourceLabel =
+                    c.source_file && c.source_file.toLowerCase() !== "listing"
+                      ? c.source_file
+                      : c.doc_type === "listing"
+                      ? "Listing details"
+                      : c.doc_type;
+                  const locLabel =
+                    c.page != null
+                      ? ` — p. ${c.page}`
+                      : c.section
+                      ? ` — ${c.section}`
+                      : "";
+                  return (
+                    <div
+                      key={i}
+                      style={{
+                        marginBottom: "1rem",
+                        paddingBottom: "1rem",
+                        borderBottom: i < usableCitations.length - 1 ? "1px solid var(--border)" : "none",
+                      }}
+                    >
+                      <strong style={{ fontSize: "0.85rem", textTransform: "capitalize" }}>
+                        {sourceLabel}{locLabel}
+                      </strong>
+                      <p style={{ fontSize: "0.875rem", color: "var(--muted)", marginTop: "0.25rem" }}>
+                        {c.snippet}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })()}
 
           {report.memo_markdown && (
             <div className="card">

@@ -30,12 +30,20 @@ Required JSON keys:
     Always include this exact sentence: "Value is based on municipal assessed-value proxy data, NOT a market sale price."
 
     ## Comparable Sales
-    Bullet list only — no tables. Each bullet: address, assessed proxy value, distance.
-    Example: "- 123 Main St: $420,000 assessed proxy, 0.3 mi"
+    Bullet list only — no tables. Every item (including any summary) MUST start on its own
+    separate line beginning with "- ". Never append text to the end of another bullet.
+    Show the 3 closest/most similar comps. If more exist, add a SEPARATE final bullet:
+      "- N additional comp(s) ranged from $X to $Y."
+    Example (each on its own line):
+    - 123 Main St: $420,000 assessed proxy, 0.3 mi
+    - 456 Oak Ave: $415,000 assessed proxy, 0.5 mi
+    - 789 Pine Rd: $430,000 assessed proxy, 0.8 mi
+    - 2 additional comps ranged from $390,000 to $445,000.
 
     ## Adjustments
-    Bullet list only — no tables. Group by comp ID.
-    Example: "- Comp C001 | GLA: subject 1,800 sqft vs comp 2,100 sqft → -$9,000"
+    Bullet list only — no tables. Show only the 3 most impactful adjustments across all comps
+    (pick the factors with the largest dollar impact). Skip minor or zero-dollar adjustments.
+    Example: "- GLA: subject 1,800 sqft vs comp avg 2,100 sqft → -$9,000"
 
     ## Risk Assessment
     Risk score out of 100. Bullet list of each risk flag with [SEVERITY] label and one-line explanation.
@@ -105,6 +113,8 @@ Use citations from the citations array. Include comparable analysis and adjustme
 
     try:
         llm_result = generate_structured_report(SYSTEM_PROMPT, user_prompt)
+        if llm_result.get("memo_markdown"):
+            llm_result["memo_markdown"] = _fix_merged_bullets(llm_result["memo_markdown"])
     except Exception as exc:
         llm_result = {
             "memo_markdown": _fallback_memo(subject, comps, valuation, risk_flags, exc),
@@ -149,6 +159,23 @@ Use citations from the citations array. Include comparable analysis and adjustme
     }
 
 
+def _fix_merged_bullets(text: str) -> str:
+    """Split any bullet line where the LLM appended a second sentence without a newline.
+
+    Catches the pattern: "- some comp text N additional comps ranged from"
+    and inserts a newline before the digit-started summary sentence.
+    """
+    import re
+    # Match a bullet line that contains an inline "N additional comp(s) ranged from"
+    # and split it into two separate bullets.
+    text = re.sub(
+        r"(- [^\n]+?\bmi)\s+(\d+ additional comp)",
+        r"\1\n- \2",
+        text,
+    )
+    return text
+
+
 def _fallback_memo(subject, comps, valuation, risk_flags, exc) -> str:
     address = subject.get("address", "N/A")
     est_value = valuation.get("estimated_value", 0) or 0
@@ -157,11 +184,19 @@ def _fallback_memo(subject, comps, valuation, risk_flags, exc) -> str:
     ci_high = ci.get("high", 0)
     confidence = valuation.get("confidence_score", 0.5) or 0.5
 
+    top3 = (comps or [])[:3]
+    remaining = len(comps or []) - len(top3)
     comp_bullets = "\n".join(
         f"- {c.get('address', 'N/A')}: ${c.get('sale_price', 0):,.0f} assessed proxy, "
         f"{c.get('distance_miles', 0):.1f} mi"
-        for c in (comps[:5] if comps else [])
+        for c in top3
     ) or "- No comparables available."
+    if remaining > 0:
+        prices = [c.get("sale_price", 0) for c in (comps or [])[3:]]
+        comp_bullets += (
+            f"\n- {remaining} additional comp{'s' if remaining > 1 else ''} ranged from "
+            f"${min(prices):,.0f} to ${max(prices):,.0f}."
+        )
 
     flag_bullets = "\n".join(
         f"- [{f.get('severity', 'UNKNOWN').upper()}] {f.get('message', '')}"

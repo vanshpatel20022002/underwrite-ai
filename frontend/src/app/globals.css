@@ -139,12 +139,19 @@ th {
   font-size: 0.85rem;
 }
 
+.memo-content {
+  max-width: 72ch;
+  line-height: 1.75;
+}
+
 .memo-content h2 {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text);
-  margin: 1.25rem 0 0.4rem;
-  padding-bottom: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 2rem 0 0.6rem;
+  padding-bottom: 0.35rem;
   border-bottom: 1px solid var(--border);
 }
 
@@ -153,32 +160,40 @@ th {
 }
 
 .memo-content p {
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.75rem;
   color: var(--text);
-  font-size: 0.9rem;
+  font-size: 0.92rem;
 }
 
 .memo-content ul,
 .memo-content ol {
-  margin: 0.4rem 0 0.6rem 1.25rem;
+  margin: 0.25rem 0 0.9rem 1.4rem;
 }
 
 .memo-content li {
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   color: var(--text);
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.45rem;
+  line-height: 1.6;
 }
 
 .memo-content strong {
   color: var(--text);
+  font-weight: 600;
+}
+
+.memo-content em {
+  color: var(--muted);
 }
 
 .memo-content blockquote {
   border-left: 3px solid var(--accent);
-  padding-left: 0.75rem;
+  padding: 0.5rem 0.75rem;
   color: var(--muted);
   font-style: italic;
-  margin: 0.5rem 0;
+  margin: 0.75rem 0;
+  background: rgba(59, 130, 246, 0.05);
+  border-radius: 0 6px 6px 0;
 }
 
 @media (max-width: 768px) {
