@@ -12,6 +12,12 @@ from sklearn.model_selection import train_test_split
 from app.config import get_settings
 from app.ml.features import FEATURE_COLS, build_feature_frame
 
+try:
+    import mlflow
+    _MLFLOW_AVAILABLE = True
+except ImportError:
+    _MLFLOW_AVAILABLE = False
+
 settings = get_settings()
 MODEL_DIR = Path(__file__).parent.parent.parent / "models"
 
@@ -61,4 +67,47 @@ def train_price_model(data_path: str | None = None) -> dict:
     metrics_path = MODEL_DIR / "metrics.json"
     metrics_path.write_text(json.dumps(metrics, indent=2))
 
+    _log_mlflow(params, metrics, model_path, stats_path, metrics_path, data_path, X)
+
     return metrics
+
+
+def _log_mlflow(
+    lgb_params: dict,
+    metrics: dict,
+    model_path: Path,
+    stats_path: Path,
+    metrics_path: Path,
+    data_path: str,
+    X: "pd.DataFrame",
+) -> None:
+    if not _MLFLOW_AVAILABLE:
+        return
+    try:
+        mlflow.set_experiment("underwriting-price-model")
+        with mlflow.start_run():
+            mlflow.log_params({
+                "model_type": "lightgbm",
+                "objective": lgb_params["objective"],
+                "learning_rate": lgb_params["learning_rate"],
+                "num_leaves": lgb_params["num_leaves"],
+                "feature_fraction": lgb_params["feature_fraction"],
+                "num_boost_round": 300,
+                "test_split": 0.2,
+                "random_state": 42,
+                "feature_cols": ",".join(X.columns.tolist()),
+                "dataset_size": len(X),
+                "data_source": Path(data_path).name,
+            })
+            mlflow.log_metrics({
+                "mae": metrics["mae"],
+                "rmse": metrics["rmse"],
+                "mape": metrics["mape"],
+                "train_size": float(metrics["train_size"]),
+            })
+            for artifact in (model_path, stats_path, metrics_path):
+                if artifact.exists():
+                    mlflow.log_artifact(str(artifact))
+    except Exception as exc:
+        # MLflow tracking is non-critical — never block a training run
+        print(f"[mlflow] tracking skipped: {exc}")

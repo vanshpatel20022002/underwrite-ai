@@ -19,6 +19,7 @@ Real estate underwriting is manually intensive and judgment-heavy. This project 
 | Observability | OpenTelemetry tracing, Ragas/DeepEval eval stubs |
 | Dockerized full stack | Postgres, Qdrant, Redis, API, Worker, Next.js |
 | Optional Kubernetes deployment | Local/staging manifests for API, worker, frontend, PostGIS, Redis, and Qdrant |
+| MLOps + evaluation | MLflow experiment tracking, deterministic regression evals, optional Evidently drift report |
 
 This is not a toy demo. Every service runs in Docker, data flows through a real geospatial database, and the ML model is trained on 156 k real municipal assessment records.
 
@@ -189,6 +190,46 @@ Verified result for **15 Deermeade Pl SE, Calgary, AB** (3 bed / 2 bath / 1,838 
 > **Risk Assessment** — Risk score 35/100. One medium flag: zoning document not uploaded. Recommend providing zoning confirmation before final approval.
 >
 > **Recommendation** — `review`
+
+---
+
+## MLOps and Evaluation
+
+The project includes a lightweight, local-first MLOps layer. Nothing here requires a paid service or cloud account.
+
+### MLflow experiment tracking
+
+Every `train_price_model()` call logs params, metrics, and model artifacts to a local MLflow experiment (`underwriting-price-model`). Install MLflow and run `mlflow ui` to compare training runs after retraining on new data.
+
+```bash
+pip install mlflow
+mlflow ui --backend-store-uri backend/mlruns
+# Open: http://localhost:5000
+```
+
+### Deterministic underwriting regression evals
+
+`evals/run_eval.py` runs 5 fixed Calgary cases end-to-end through the live API and checks structural guarantees — estimated value present, at least 3 comps, proxy disclosure in memo, no `p.?` artifacts, recommendation never `approve` without zoning. Exits non-zero on failure, suitable for CI.
+
+```bash
+python evals/run_eval.py
+```
+
+### Optional Ragas / DeepEval LLM evals
+
+The eval runner automatically calls the existing backend helpers (`backend/app/eval/`) for answer relevancy and faithfulness scoring. These are silently skipped if the packages or API keys are absent — they do not affect the deterministic assertion results.
+
+### Optional Evidently drift report
+
+`mlops/evidently_drift.py` compares the training dataset against a newer sample and generates an HTML drift + data quality report for `sale_price`, `square_footage`, `lot_size`, `year_built`, and `property_type`.
+
+```bash
+pip install evidently
+python mlops/evidently_drift.py        # splits training CSV 80/20 for demo
+# Output: reports/evidently_drift_report.html
+```
+
+See `evals/README.md` and `mlops/README.md` for full details.
 
 ---
 ## Optional Kubernetes Deployment
