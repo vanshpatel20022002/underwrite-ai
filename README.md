@@ -18,6 +18,7 @@ Real estate underwriting is manually intensive and judgment-heavy. This project 
 | Async document ingestion | Celery + Redis worker queue |
 | Observability | OpenTelemetry tracing, Ragas/DeepEval eval stubs |
 | Dockerized full stack | Postgres, Qdrant, Redis, API, Worker, Next.js |
+| Optional Kubernetes deployment | Local/staging manifests for API, worker, frontend, PostGIS, Redis, and Qdrant |
 
 This is not a toy demo. Every service runs in Docker, data flows through a real geospatial database, and the ML model is trained on 156 k real municipal assessment records.
 
@@ -190,6 +191,13 @@ Verified result for **15 Deermeade Pl SE, Calgary, AB** (3 bed / 2 bath / 1,838 
 > **Recommendation** — `review`
 
 ---
+## Optional Kubernetes Deployment
+
+Kubernetes manifests are available under `deploy/k8s/` for local kind/minikube or staging-style deployment. Docker Compose remains the recommended path for the main demo.
+
+See `deploy/k8s/README.md`.
+
+---
 ## Demo Screenshots
 
 ### Create underwriting case
@@ -203,6 +211,7 @@ Verified result for **15 Deermeade Pl SE, Calgary, AB** (3 bed / 2 bath / 1,838 
 ### Generated underwriting memo
 
 ![Underwriting memo](docs/screenshots/03-underwriting-memo.png)
+
 ---
 ## Data Disclosure
 
